@@ -57,6 +57,6 @@ extension RecipeListViewModel {
 
 
 // MARK: - Dependencies
-protocol RecipeLoader {
+protocol RecipeLoader: Sendable {
     func loadRecipes(from url: URL) async throws -> [Recipe]
 }
