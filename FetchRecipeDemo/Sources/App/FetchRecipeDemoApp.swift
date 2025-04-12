@@ -11,7 +11,7 @@ import SwiftUI
 struct FetchRecipeDemoApp: App {
     var body: some Scene {
         WindowGroup {
-            RecipeNavStack(url: .production)
+            RecipeNavStack(recipeURL: .production, imageCacheManager: ImageCacheManager(delegate: ImageCacheDelegateAdapter()))
         }
     }
 }

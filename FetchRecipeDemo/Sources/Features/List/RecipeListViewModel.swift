@@ -21,13 +21,15 @@ final class RecipeListViewModel: ObservableObject {
         self.recipes = recipes
         self.searchText = searchText
         
+        // this thread management wouldn't work if RecipeListViewModel was @MainActor
+        // apparently Swift Concurrency doesn't play nice with Combine :(
         $recipes
             .combineLatest($searchText)
-            .receive(on: DispatchQueue.global(qos: .background))
+            .receive(on: DispatchQueue.global(qos: .background)) // performing 'intense work' on background thread
             .map { list, text in
                 RecipeSectionBuilder.makeSections(from: list, matching: text)
             }
-            .receive(on: DispatchQueue.main)
+            .receive(on: DispatchQueue.main) // publishing results on MainThread
             .assign(to: &$sections)
     }
 }
@@ -55,6 +57,6 @@ extension RecipeListViewModel {
 
 
 // MARK: - Dependencies
-protocol RecipeLoader: Sendable {
+protocol RecipeLoader {
     func loadRecipes(from url: URL) async throws -> [Recipe]
 }

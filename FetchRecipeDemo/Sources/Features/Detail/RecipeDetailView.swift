@@ -1,6 +1,6 @@
 //
 //  RecipeDetailView.swift
-//  FetchRecipeDemo
+//  FetchTakeHomeTest
 //
 //  Created by Nikolai Nobadi on 4/11/25.
 //
@@ -9,6 +9,7 @@ import SwiftUI
 
 struct RecipeDetailView: View {
     let recipe: Recipe
+    let loadImageData: (URL) async -> Data?
     
     private var imageSize: CGSize {
         return .init(width: UIScreen.main.bounds.width - 50, height: 250)
@@ -16,7 +17,7 @@ struct RecipeDetailView: View {
 
     var body: some View {
         VStack {
-            VStack {
+            VStack(alignment: .leading) {
                 Text(recipe.name)
                     .font(.title2)
                     .bold()
@@ -27,37 +28,16 @@ struct RecipeDetailView: View {
             }
             
             Spacer()
-            
-            AsyncImage(url: recipe.largeImageURL) { phase in
-                switch phase {
-                case .empty:
-                    ZStack {
-                        Rectangle()
-                            .fill(.gray.opacity(0.2))
-                        ProgressView()
-                    }
-                case .success(let image):
-                    image
-                        .resizable()
-                        .scaledToFit()
-                case .failure:
-                    Image(systemName: "photo")
-                        .resizable()
-                        .scaledToFit()
-                        .foregroundColor(.secondary)
-                @unknown default:
-                    EmptyView()
-                }
-            }
-            .frame(maxWidth: .infinity)
-            .clipShape(.rect(cornerRadius: 12))
-            
+            ManualImageView(url: recipe.largeImageURL, size: imageSize, loadImageData: loadImageData)
+                .padding()
+                .clipShape(.rect(cornerRadius: 10))
             Spacer()
-            
             OptionalLink("View Source", url: recipe.sourceURL)
             OptionalLink("Watch on YouTube", url: recipe.youtubeURL)
         }
         .padding()
+        .navigationTitle(recipe.name)
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 
@@ -82,5 +62,5 @@ private struct OptionalLink: View {
 
 // MARK: - Preview
 #Preview {
-    RecipeDetailView(recipe: .sample)
+    RecipeDetailView(recipe: .sample, loadImageData: { _ in nil })
 }

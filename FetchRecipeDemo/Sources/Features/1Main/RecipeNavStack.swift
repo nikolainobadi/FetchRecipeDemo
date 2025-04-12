@@ -1,6 +1,6 @@
 //
 //  RecipeNavStack.swift
-//  FetchRecipeDemo
+//  FetchTakeHomeTest
 //
 //  Created by Nikolai Nobadi on 4/11/25.
 //
@@ -8,30 +8,37 @@
 import SwiftUI
 
 struct RecipeNavStack: View {
-    let url: URL
+    let recipeURL: URL
+    let imageCacheManager: ImageCacheManager
     
     var body: some View {
         NavigationStack {
-            RecipeListView(viewModel: .init(url: url, loader: RecipeLoaderAdapter()))
+            RecipeListView(viewModel: .customInit(url: recipeURL), loadImageData: imageCacheManager.loadImageData(from:))
                 .navigationTitle("Recipes")
                 .navigationDestination(for: Recipe.self) { recipe in
-                    RecipeDetailView(recipe: recipe)
+                    RecipeDetailView(recipe: recipe, loadImageData: imageCacheManager.loadImageData(from:))
                 }
         }
     }
 }
 
-
 // MARK: - Preview
-#Preview {
-    RecipeNavStack(url: .production)
+#Preview("Production") {
+    RecipeNavStack(recipeURL: .production, imageCacheManager: .init(delegate: ImageCacheDelegateAdapter()))
 }
 
-final class RecipeLoaderAdapter: RecipeLoader {
-    func loadRecipes(from url: URL) async throws -> [Recipe] {
-        let (data, _) = try await URLSession.shared.data(from: url)
-        let decoded = try JSONDecoder().decode(RecipeResponse.self, from: data)
-        
-        return decoded.recipes.map({ .init(remote: $0) })
+#Preview("Malformed") {
+    RecipeNavStack(recipeURL: .malformed, imageCacheManager: .init(delegate: ImageCacheDelegateAdapter()))
+}
+
+#Preview("Empty") {
+    RecipeNavStack(recipeURL: .empty, imageCacheManager: .init(delegate: ImageCacheDelegateAdapter()))
+}
+
+
+// MARK: - Extension Dependencies
+private extension RecipeListViewModel {
+    static func customInit(url: URL) -> RecipeListViewModel {
+        return .init(url: url, loader: RecipeLoaderAdapter())
     }
 }
