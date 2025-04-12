@@ -8,6 +8,18 @@
 import SwiftUI
 
 @main
+struct AppLauncher {
+    static func main() throws {
+        if NSClassFromString("XCTestCase") != nil {
+            TestApp.main()
+        } else {
+            FetchRecipeDemoApp.main()
+        }
+    }
+}
+
+
+// MARK: - Production
 struct FetchRecipeDemoApp: App {
     var body: some Scene {
         WindowGroup {
@@ -15,6 +27,17 @@ struct FetchRecipeDemoApp: App {
         }
     }
 }
+
+
+// MARK: - Testing
+struct TestApp: App {
+    var body: some Scene {
+        WindowGroup {
+            Text("Running unit tests...")
+        }
+    }
+}
+
 
 
 // MARK: - Extension Dependencies
