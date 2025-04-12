@@ -23,6 +23,7 @@ struct RecipeListView: View {
             }
         }
         .searchable(text: $viewModel.searchText)
+        .handlingEmptyList(when: viewModel.noRecipes)
         .task {
             await viewModel.loadRecipes()
         }
