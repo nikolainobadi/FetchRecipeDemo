@@ -76,6 +76,15 @@ private struct RecipeRow: View {
 
 
 // MARK: - Preview
-//#Preview {
-//    RecipeListView()
-//}
+#Preview {
+    NavigationStack {
+        RecipeListView(viewModel: .init(url: .production, loader: PreviewLoader()))
+            .navigationTitle("Recipes")
+    }
+}
+
+private final class PreviewLoader: RecipeLoader {
+    func loadRecipes(from url: URL) async throws -> [Recipe] {
+        Recipe.sampleList
+    }
+}

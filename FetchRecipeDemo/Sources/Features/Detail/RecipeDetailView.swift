@@ -27,6 +27,7 @@ struct RecipeDetailView: View {
             }
             
             Spacer()
+            
             AsyncImage(url: recipe.largeImageURL) { phase in
                 switch phase {
                 case .empty:
@@ -76,4 +77,10 @@ private struct OptionalLink: View {
             Link(title, destination: url)
         }
     }
+}
+
+
+// MARK: - Preview
+#Preview {
+    RecipeDetailView(recipe: .sample)
 }
