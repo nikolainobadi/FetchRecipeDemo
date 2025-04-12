@@ -8,6 +8,7 @@
 import Foundation
 
 final class RecipeListViewModel: ObservableObject {
+    @Published var invalidData = false
     @Published var searchText: String = ""
     @Published var sections: [RecipeSection] = []
     @Published private var recipes: [Recipe] = []
@@ -40,6 +41,14 @@ extension RecipeListViewModel {
     var noRecipes: Bool {
         return recipes.isEmpty
     }
+    
+    var emptyListTitle: String {
+        return invalidData ? "Invalid Data" : "No Recipes"
+    }
+    
+    var emptyListDescription: String {
+        return invalidData ? "Looks like the recipe list is corrupcted" : "Check your connection or try again later"
+    }
 }
 
 
@@ -51,6 +60,7 @@ extension RecipeListViewModel {
             recipes = try await loader.loadRecipes(from: url)
         } catch {
             recipes = []
+            invalidData = true
         }
     }
 }

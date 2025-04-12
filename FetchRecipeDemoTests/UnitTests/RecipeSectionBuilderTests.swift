@@ -74,7 +74,7 @@ private extension RecipeSectionBuilderTests {
     func makeRecipes(_ entries: [(String, String)]) -> [Recipe] {
         return entries.map { name, cuisine in
             Recipe(
-                id: UUID(),
+                id: .init(),
                 name: name,
                 cuisine: cuisine,
                 largeImageURL: .init(string: "https://example.com/large.jpg")!,

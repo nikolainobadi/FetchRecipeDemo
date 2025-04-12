@@ -23,7 +23,7 @@ struct EmptyListViewModifer: ViewModifier {
 }
 
 extension View {
-    func handlingEmptyList(when isEmpty: Bool, title: String = "No Recipes", systemImage: String = "fork.knife", description: String = "Check your connection or try again later") -> some View {
+    func handlingEmptyList(when isEmpty: Bool, title: String, systemImage: String = "fork.knife", description: String) -> some View {
         modifier(EmptyListViewModifer(isEmpty: isEmpty, title: title, systemImage: systemImage, description: description))
     }
 }
