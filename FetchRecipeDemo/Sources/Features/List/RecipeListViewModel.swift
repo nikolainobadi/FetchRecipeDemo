@@ -47,7 +47,7 @@ extension RecipeListViewModel {
     }
     
     var emptyListDescription: String {
-        return invalidData ? "Looks like the recipe list is corrupcted" : "Check your connection or try again later"
+        return invalidData ? "Looks like the recipe list is corrupted" : "Check your connection or try again later"
     }
 }
 
