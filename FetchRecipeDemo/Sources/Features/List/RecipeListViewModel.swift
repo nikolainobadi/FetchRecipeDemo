@@ -23,23 +23,11 @@ final class RecipeListViewModel: ObservableObject {
         
         $recipes
             .combineLatest($searchText)
+            .receive(on: DispatchQueue.global(qos: .background))
             .map { list, text in
-                var filtered: [Recipe]
-                if text.isEmpty {
-                    filtered = list
-                } else {
-                    filtered = list.filter {
-                        $0.name.localizedCaseInsensitiveContains(text) || $0.cuisine.localizedCaseInsensitiveContains(text)
-                    }
-                }
-                let dict = Dictionary(grouping: filtered, by: { String($0.name.prefix(1)).uppercased() })
-                
-                return dict
-                    .sorted { $0.key < $1.key }
-                    .map { key, value in
-                        RecipeSection(id: key, title: key, recipes: value)
-                    }
+                RecipeSectionBuilder.makeSections(from: list, matching: text)
             }
+            .receive(on: DispatchQueue.main)
             .assign(to: &$sections)
     }
 }
