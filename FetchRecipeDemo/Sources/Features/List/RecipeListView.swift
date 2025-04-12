@@ -8,33 +8,26 @@
 import SwiftUI
 
 struct RecipeListView: View {
-    @State private var recipes: [Recipe] = []
+    @StateObject var viewModel: RecipeListViewModel
     
-    let url: URL
-    
-    private func loadRecipes() async {
-        do {
-            let (data, _) = try await URLSession.shared.data(from: url)
-            let decoded = try JSONDecoder().decode(RecipeResponse.self, from: data)
-            
-            recipes = decoded.recipes.map({ .init(remote: $0) })
-        } catch {
-            print("no recipes")
-        }
-    }
     var body: some View {
         List {
-            ForEach(recipes) { recipe in
-                NavigationLink(value: recipe) {
-                    RecipeRow(recipe: recipe)
+            ForEach(viewModel.sections) { section in
+                Section(section.title) {
+                    ForEach(section.recipes) { recipe in
+                        NavigationLink(value: recipe) {
+                            RecipeRow(recipe: recipe)
+                        }
+                    }
                 }
             }
         }
+        .searchable(text: $viewModel.searchText)
         .task {
-            await loadRecipes()
+            await viewModel.loadRecipes()
         }
         .refreshable {
-            await loadRecipes()
+            await viewModel.loadRecipes()
         }
     }
 }

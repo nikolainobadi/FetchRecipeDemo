@@ -12,7 +12,7 @@ struct RecipeNavStack: View {
     
     var body: some View {
         NavigationStack {
-            RecipeListView(url: url)
+            RecipeListView(viewModel: .init(url: url, loader: RecipeLoaderAdapter()))
                 .navigationTitle("Recipes")
                 .navigationDestination(for: Recipe.self) { recipe in
                     RecipeDetailView(recipe: recipe)
@@ -25,4 +25,13 @@ struct RecipeNavStack: View {
 // MARK: - Preview
 #Preview {
     RecipeNavStack(url: .production)
+}
+
+final class RecipeLoaderAdapter: RecipeLoader {
+    func loadRecipes(from url: URL) async throws -> [Recipe] {
+        let (data, _) = try await URLSession.shared.data(from: url)
+        let decoded = try JSONDecoder().decode(RecipeResponse.self, from: data)
+        
+        return decoded.recipes.map({ .init(remote: $0) })
+    }
 }
