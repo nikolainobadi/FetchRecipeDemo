@@ -9,16 +9,18 @@ import SwiftUI
 
 struct MainTabView: View {
     let imageCacheManager: ImageCacheManager
-    
+
     var body: some View {
         TabView {
-            Tab("Recipes", systemImage: "fork.knife") {
-                RecipeNavStack(recipeURL: .production, imageCacheManager: imageCacheManager)
-            }
-            
-            Tab("Settings", systemImage: "gearshape") {
-                SettingsNavStack(imageCacheManager: imageCacheManager)
-            }
+            RecipeNavStack(recipeURL: .production, imageCacheManager: imageCacheManager)
+                .tabItem {
+                    Label("Recipes", systemImage: "fork.knife")
+                }
+
+            SettingsNavStack(imageCacheManager: imageCacheManager)
+                .tabItem {
+                    Label("Settings", systemImage: "gearshape")
+                }
         }
     }
 }
