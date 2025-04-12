@@ -1,0 +1,34 @@
+{
+  "configurations" : [
+    {
+      "id" : "8E5220AA-2AC8-4936-8B86-F007EEA41B1B",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : {
+      "targets" : [
+        {
+          "containerPath" : "container:FetchRecipeDemo.xcodeproj",
+          "identifier" : "D45E58402DA9E31B00B44D91",
+          "name" : "FetchRecipeDemo"
+        }
+      ]
+    },
+    "testExecutionOrdering" : "random",
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:FetchRecipeDemo.xcodeproj",
+        "identifier" : "D4BC15282DA9FD40009C0785",
+        "name" : "FetchRecipeDemoTests"
+      }
+    }
+  ],
+  "version" : 1
+}
