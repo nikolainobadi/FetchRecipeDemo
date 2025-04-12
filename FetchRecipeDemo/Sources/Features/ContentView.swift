@@ -8,24 +8,34 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var recipes: [RemoteRecipe] = []
+    @State private var recipes: [Recipe] = []
     
     let url: URL
     
-    var body: some View {
-        List {
-            ForEach(recipes, id: \.uuid) { recipe in
-                RecipeRow(recipe: recipe)
-            }
+    private func loadRecipes() async {
+        do {
+            let (data, _) = try await URLSession.shared.data(from: url)
+            let decoded = try JSONDecoder().decode(RecipeResponse.self, from: data)
+            
+            recipes = decoded.recipes.map({ .init(remote: $0) })
+        } catch {
+            print("no recipes")
         }
-        .task {
-            do {
-                let (data, _) = try await URLSession.shared.data(from: url)
-                let decoded = try JSONDecoder().decode(RecipeResponse.self, from: data)
-                
-                recipes = decoded.recipes
-            } catch {
-                print("no recipes")
+    }
+    
+    var body: some View {
+        NavigationStack {
+            List {
+                ForEach(recipes) { recipe in
+                    RecipeRow(recipe: recipe)
+                }
+            }
+            .navigationTitle("Recipes")
+            .task {
+                await loadRecipes()
+            }
+            .refreshable {
+                await loadRecipes()
             }
         }
     }
@@ -34,11 +44,11 @@ struct ContentView: View {
 
 // MARK: - Row
 private struct RecipeRow: View {
-    let recipe: RemoteRecipe
+    let recipe: Recipe
     
     var body: some View {
         HStack {
-            AsyncImage(url: recipe.photoURLSmall) { phase in
+            AsyncImage(url: recipe.smallImageURL) { phase in
                 switch phase {
                 case .empty:
                     ProgressView()
@@ -48,7 +58,7 @@ private struct RecipeRow: View {
                         .resizable()
                         .scaledToFill()
                         .frame(width: 60, height: 60)
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                        .clipShape(.rect(cornerRadius: 8))
                 case .failure:
                     Image(systemName: "photo")
                         .resizable()
@@ -112,5 +122,29 @@ extension URL {
     
     static var empty: URL {
         return .init(string: "https://d3jbb8n5wk0qxi.cloudfront.net/recipes-empty.json")!
+    }
+}
+
+struct Recipe: Identifiable, Hashable {
+    let id: UUID
+    let name: String
+    let cuisine: String
+    let largeImageURL: URL
+    let smallImageURL: URL
+    let sourceURL: URL?
+    let youtubeURL: URL?
+}
+
+extension Recipe {
+    init(remote: RemoteRecipe) {
+        self.init(
+            id: remote.uuid,
+            name: remote.name,
+            cuisine: remote.cuisine,
+            largeImageURL: remote.photoURLLarge,
+            smallImageURL: remote.photoURLSmall,
+            sourceURL: remote.sourceURL,
+            youtubeURL: remote.youtubeURL
+        )
     }
 }
