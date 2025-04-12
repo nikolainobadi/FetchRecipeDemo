@@ -11,7 +11,7 @@ import SwiftUI
 struct FetchRecipeDemoApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(url: .production)
         }
     }
 }
