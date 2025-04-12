@@ -17,23 +17,28 @@ struct RecipeDetailView: View {
 
     var body: some View {
         VStack {
-            VStack(alignment: .leading) {
-                Text(recipe.name)
-                    .font(.title2)
-                    .bold()
-                
-                Text("Cuisine: \(recipe.cuisine)")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-            }
+            Text(recipe.name)
+                .font(.largeTitle)
+                .bold()
+            
+            Text("Cuisine: \(recipe.cuisine)")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
             
             Spacer()
             ManualImageView(url: recipe.largeImageURL, size: imageSize, loadImageData: loadImageData)
                 .padding()
                 .clipShape(.rect(cornerRadius: 10))
             Spacer()
-            OptionalLink("View Source", url: recipe.sourceURL)
-            OptionalLink("Watch on YouTube", url: recipe.youtubeURL)
+            
+            HStack {
+                OptionalLink("Website", url: recipe.sourceURL)
+                OptionalLink("YouTube", url: recipe.youtubeURL)
+                    .padding()
+                    .tint(.red)
+            }
+            .font(.headline)
+            .buttonStyle(.borderedProminent)
         }
         .padding()
         .navigationTitle(recipe.name)
