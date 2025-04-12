@@ -33,9 +33,9 @@
     <td align="center"><strong>Image Cache</strong></td>
   </tr>
   <tr>
-    <td><img src="media/recipeList.gif" alt="RecipeList" width="200"/></td>
-    <td><img src="media/recipeDetail.gif" alt="RecipeView" width="200"/></td>
-    <td><img src="media/imageCache.gif" alt="ImageCache" width="200"/></td>
+    <td><img src="Media/recipeList.gif" alt="RecipeList" width="200"/></td>
+    <td><img src="Media/recipeDetail.gif" alt="RecipeView" width="200"/></td>
+    <td><img src="Media/imageCache.gif" alt="ImageCache" width="200"/></td>
   </tr>
 </table>
 
