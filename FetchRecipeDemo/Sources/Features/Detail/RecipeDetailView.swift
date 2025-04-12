@@ -43,7 +43,7 @@ struct RecipeDetailView: View {
 
 
 // MARK: - OptionalLink
-private struct OptionalLink: View {
+struct OptionalLink: View {
     let title: String
     let url: URL?
     

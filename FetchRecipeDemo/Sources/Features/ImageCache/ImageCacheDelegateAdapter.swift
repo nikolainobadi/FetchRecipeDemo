@@ -27,4 +27,18 @@ final class ImageCacheDelegateAdapter: ImageCacheDelegate {
         try? fileManager.createDirectory(at: url, withIntermediateDirectories: true)
         return url
     }
+    
+    func cachedImageCount(in directory: URL) -> Int {
+        return (try? FileManager.default.contentsOfDirectory(at: directory, includingPropertiesForKeys: nil).count) ?? 0
+    }
+    
+    func clearCachedImages(in directory: URL) {
+        // this could be error handled if needed
+        let fileManager = FileManager.default
+        if let contents = try? fileManager.contentsOfDirectory(at: directory, includingPropertiesForKeys: nil) {
+            for file in contents {
+                try? fileManager.removeItem(at: file)
+            }
+        }
+    }
 }

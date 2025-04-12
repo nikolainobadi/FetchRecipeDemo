@@ -20,6 +20,14 @@ final class ImageCacheManager: Sendable {
 
 // MARK: - LoadImageData
 extension ImageCacheManager {
+    func cachedImageCount() -> Int {
+        delegate.cachedImageCount(in: cacheDirectory)
+    }
+    
+    func clearCache() {
+        delegate.clearCachedImages(in: cacheDirectory)
+    }
+    
     func loadImageData(from url: URL) async -> Data? {
         let hashedFilename = url.absoluteString.sha256() + "." + url.pathExtension
         let path = cacheDirectory.appendingPathComponent(hashedFilename)
@@ -47,6 +55,8 @@ protocol ImageCacheDelegate: Sendable {
     func cacheImageData(_ data: Data, at path: URL)
     func fetchImageData(url: URL) async throws -> Data
     func loadCacheDirectory(named name: String) -> URL
+    func clearCachedImages(in directory: URL)
+    func cachedImageCount(in directory: URL) -> Int
 }
 
 
