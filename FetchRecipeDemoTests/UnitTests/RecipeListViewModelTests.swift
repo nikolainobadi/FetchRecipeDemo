@@ -88,7 +88,7 @@ final class RecipeListViewModelTests: TrackingMemoryLeaks {
 
         #expect(sut.invalidData)
         #expect(sut.emptyListTitle == "Invalid Data")
-        #expect(sut.emptyListDescription == "Looks like the recipe list is corrupcted")
+        #expect(sut.emptyListDescription == "Looks like the recipe list is corrupted")
     }
 }
 
